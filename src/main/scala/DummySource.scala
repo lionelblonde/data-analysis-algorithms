@@ -1,7 +1,8 @@
 import org.apache.spark.streaming.receiver._
+import org.apache.spark.storage.StorageLevel._
 
 // This is a dummy receiver that will generate toy data
-class DummySource extends Receiver[Int](org.apache.spark.storage.StorageLevel.MEMORY_AND_DISK_2) {
+class DummySource extends Receiver[Int](MEMORY_AND_DISK_2) {
 
   import scala.util.Random
   import org.apache.spark._
