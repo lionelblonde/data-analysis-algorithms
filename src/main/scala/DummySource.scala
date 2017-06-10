@@ -1,13 +1,9 @@
 import org.apache.spark.streaming.receiver._
 import org.apache.spark.storage.StorageLevel._
+import scala.util.Random
 
 // This is a dummy receiver that will generate toy data
-class DummySource extends Receiver[Int](MEMORY_AND_DISK_2) {
-
-  import scala.util.Random
-  import org.apache.spark._
-  import org.apache.spark.storage._
-  import org.apache.spark.streaming._
+class DummySource extends Receiver[Double](MEMORY_AND_DISK_2) {
 
   // Start the thread that receives data over a connection
   def onStart() {
@@ -20,7 +16,7 @@ class DummySource extends Receiver[Int](MEMORY_AND_DISK_2) {
 
   // Periodically generate a random number from 0 to 9, and the timestamp
   def receive() {
-    val gen = new Generator
+    val gen = new Generator0
     while(!isStopped()) {
       store(gen.next())
       Thread.sleep(200)
