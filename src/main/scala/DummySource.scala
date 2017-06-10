@@ -32,15 +32,36 @@ class Generator0 extends Iterator[Double] {
     // nothing fancy here: the generator is meant to run indefinitely
     true
   }
-  def next() = {
+  def next(): Double = {
     val drift: Long = 400L
     val currentTime: Long = System.currentTimeMillis()/1000
-    if ((currentTime/drift) % 2) { // no need for floor, since both are Long
-      // we can fit an even number of drifts in the current time
-      10.0 + Random.nextGaussian()
+    ((currentTime/drift) % 3) match { // no need for floor, since both are Long
+      case 0 => 10.0 + scala.util.Random.nextGaussian()
+      case 1 => 5.0 + scala.util.Random.nextGaussian()
+      case 2 => -2.0 + scala.util.Random.nextGaussian()
+    }
+  }
+}
+
+class Generator1 extends Iterator[Double] {
+  def hasNext(): Boolean = {
+    // nothing fancy here: the generator is meant to run indefinitely
+    true
+  }
+  def sineWave(frequency: Double, amplitude: Double, time : Long): Double = {
+    val value = amplitude * math.sin(2.0 * math.Pi * frequency * time.toDouble)
+    value
+  }
+  def next(): Double = {
+    val currentTime: Long = System.currentTimeMillis()/1000
+    val isSpike: Boolean = (Random.nextInt(30) == 0) // arbitrarily chose 0. Spike chance = 1/10.
+    val frequency: Double = 0.01
+    val amplitude: Double = 10.0
+    val noiseLevel: Double = 40.0
+    if (isSpike) {
+      sineWave(frequency, amplitude, currentTime) + noiseLevel * (1.0 + Random.nextGaussian())
     } else {
-      // we can fit an odd number of drifts in the current time
-      -10.0 + Random.nextGaussian()
+      sineWave(frequency, amplitude, currentTime)
     }
   }
 }

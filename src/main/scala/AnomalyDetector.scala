@@ -46,6 +46,16 @@ class AnomalyDetector(sc: org.apache.spark.SparkContext, config: AnomalyDetector
   // Core of the streaming anomaly detection via running average algorithm
   def runningAverageDetection(slide: Duration, window: Duration,
     stream: DStream[(Long, Double)], numstd: Int): DStream[(Long,Double)] = {
+    val slideStream = stream
+      .map(x => (x._1, x._2, 1.0))
+      .reduceByWindow((x1,x2) => {
+        (math.max(x1._1,x2._1), x1._2 + x2._2, x1._3 + x2._3)
+      }, slide, slide) // only take new points
+      .map(x => {
+        val timestamp = x._1
+        val mean = x._2/x._3
+        (timestamp, mean)
+      })
     val resultStream = stream
       .map(x => (x._1, x._2.toString, x._2, 1.0))
       .reduceByWindow((x1,x2) => {
@@ -53,16 +63,23 @@ class AnomalyDetector(sc: org.apache.spark.SparkContext, config: AnomalyDetector
       }, window, slide)
       // (most recent timestamp, concatenation of the values, sum over window, count over window)
       .map(x => {
-        var nvariance = 0.0
         val timestamp = x._1
         val values = x._2.split("!").map(_.toDouble).toList
         val mean = x._3/x._4
         // compute the variance
-        values.foreach(value => nvariance += math.pow(value - mean,2))
-        val variance = nvariance/x._4
-        val lastValue = values.last
-        (timestamp,if(lastValue > numstd.toDouble*math.sqrt(variance)) 1.0 else 0.0)
-       })
+        val variance = values.map(value => math.pow(value - mean,2)).sum/x._4
+        (timestamp, (mean, variance))
+      })
+      .join(slideStream).map(x => {
+        val timestamp = x._1
+        val meanWindow = x._2._1._1
+        val varianceWindow = x._2._1._2
+        val meanSlide = x._2._2
+        val isAnomaly =
+          if (math.abs(meanSlide-meanWindow) >
+            numstd.toDouble*math.sqrt(varianceWindow)) 1.0 else 0.0
+        (timestamp,isAnomaly)
+      })
     return resultStream
   }
 
