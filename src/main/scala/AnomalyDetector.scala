@@ -129,11 +129,9 @@ class AnomalyDetector(sc: org.apache.spark.SparkContext, config: AnomalyDetector
           .asInstanceOf[GenericRecord]
           .get("time")
           .toString
-        //println(s"Time = ${time}")
         val value: String = avroRecord.asInstanceOf[GenericRecord]
-          .get("value")
+          .get(config.value)
           .toString
-        //println(s"Value = ${value}")
         (time, value)
       })
 
