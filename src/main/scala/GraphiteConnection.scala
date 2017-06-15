@@ -21,21 +21,17 @@ class GraphiteConnection(address: java.net.InetSocketAddress) extends java.io.Cl
   )
 
   // Send measurement carbon server in a thread-safe fashion
-  def send(name: String, value: Double, timestamp: Long): Unit = {
-    //val timestamp: Long = System.currentTimeMillis()/1000
+  def send(metric: String, value: Double, timestamp: Long): Unit = {
     val sb = new StringBuilder()
-      .append(sanitize(name)).append(' ')
+      .append(sanitize(metric)).append(' ')
       .append(sanitize(value.toString())).append(' ')
       .append(timestamp.toString).append('\n')
 
-    // The write calls below handle the string in-one-go (locking);
-    // Whereas the metrics' implementation of the graphite client uses multiple `write` calls,
-    // which could become interwoven, thus producing a wrong metric-line, when called by multiple threads.
     writer.write(sb.toString())
     writer.flush()
   }
 
-  // Closes underlying connection
+  // Close underlying connection
   def close(): Unit = {
     try socket.close() finally writer.close()
   }
