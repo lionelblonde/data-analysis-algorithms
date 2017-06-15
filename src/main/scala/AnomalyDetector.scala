@@ -43,6 +43,9 @@ class AnomalyDetector(sc: org.apache.spark.SparkContext, config: AnomalyDetector
     config.schemaRegistryPort.toString
   val topicSet = Set(config.topic)
 
+
+  val reshape
+
   // Core of the streaming anomaly detection via running average algorithm
   def runningAverageDetection(slide: Duration, window: Duration,
     stream: DStream[(Long, Double)], numstd: Int): DStream[(Long,Double)] = {
@@ -101,8 +104,10 @@ class AnomalyDetector(sc: org.apache.spark.SparkContext, config: AnomalyDetector
     val fullAddress = new InetSocketAddress(config.carbonAddress, config.carbonPort)
 
     // Streams creation
+    // DUmmy stream
+    val eventsPerSecond = 5
     val stream = ssc
-      .receiverStream(new DummySource())
+      .receiverStream(new DummySource(eventsPerSecond))
       .map(x => (System.currentTimeMillis()/1000, x.toDouble))
 
     //var offsetRanges = scala.Array[OffsetRange]()
