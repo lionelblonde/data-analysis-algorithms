@@ -1,4 +1,7 @@
-class GraphiteConnection(address: java.net.InetSocketAddress) extends java.io.Closeable {
+import java.net.InetSocketAddress
+import java.io.Closeable
+
+class GraphiteConnection(address: InetSocketAddress) extends Closeable {
 
   import java.util.regex.Pattern
   import java.nio.charset.Charset
@@ -20,7 +23,7 @@ class GraphiteConnection(address: java.net.InetSocketAddress) extends java.io.Cl
     new OutputStreamWriter(socket.getOutputStream, charset)
   )
 
-  // Send measurement carbon server in a thread-safe fashion
+  // Send record to the carbon server in a thread-safe fashion
   def send(metric: String, value: Double, timestamp: Long): Unit = {
     val sb = new StringBuilder()
       .append(sanitize(metric)).append(' ')
