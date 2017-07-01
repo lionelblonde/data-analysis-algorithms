@@ -63,6 +63,7 @@ class DummySource(generator: String, ratePerSec: Int) extends Receiver[Double](M
   // Create a socket and receive data until receiver is stopped
   def receive() {
     val gen = generator match {
+      //TODO instantiate class associated with the associated parameter
       case "drift" => new Generator0
       case "outlier" => new Generator1
     }
