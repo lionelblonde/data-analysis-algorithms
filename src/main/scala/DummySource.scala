@@ -14,9 +14,9 @@ class Generator0 extends Iterator[Double] {
     val drift: Long = 400L
     val currentTime: Long = System.currentTimeMillis()/1000
     ((currentTime/drift) % 3) match { // no need for floor, since both are Long
-      case 0 => 10.0 + scala.util.Random.nextGaussian()
-      case 1 => 5.0 + scala.util.Random.nextGaussian()
-      case 2 => -2.0 + scala.util.Random.nextGaussian()
+      case 0 => 10.0 + Random.nextGaussian()
+      case 1 => 5.0 + Random.nextGaussian()
+      case 2 => -2.0 + Random.nextGaussian()
     }
   }
 }
