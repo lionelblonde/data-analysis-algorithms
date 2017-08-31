@@ -24,12 +24,11 @@ class GraphiteConnection(address: InetSocketAddress) extends Closeable {
   )
 
   // Send record to the carbon server in a thread-safe fashion
-  def send(metric: String, value: Double, timestamp: Long): Unit = {
+  def send(metric: String, value: String, timestamp: String): Unit = {
     val sb = new StringBuilder()
       .append(sanitize(metric)).append(' ')
-      .append(sanitize(value.toString())).append(' ')
-      .append(timestamp.toString).append('\n')
-
+      .append(sanitize(value)).append(' ')
+      .append(timestamp).append('\n')
     writer.write(sb.toString())
     writer.flush()
   }
