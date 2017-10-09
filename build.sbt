@@ -13,6 +13,8 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % "2.1.0" % "provided",
   "org.apache.spark" %% "spark-streaming" % "2.1.0" % "provided",
   "org.apache.spark" %% "spark-streaming-kafka-0-8" % "2.1.0" % "provided",
+  "org.apache.spark" %% "spark-mllib" % "2.1.0",
+  "org.apache.spark" %% "spark-sql" % "2.1.0",
   "io.confluent" % "kafka-avro-serializer" % "3.0.0"
     exclude("com.fasterxml.jackson.core", "jackson-core")
     exclude("com.fasterxml.jackson.core", "jackson-databind")
@@ -23,7 +25,13 @@ libraryDependencies ++= Seq(
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.6.5",
   "com.fasterxml.jackson.core" % "jackson-annotations" % "2.6.5",
   "org.apache.avro" % "avro" % "1.8.0" % "provided",
-  "com.esotericsoftware.kryo" % "kryo" % "2.21" % "provided"
+  "com.esotericsoftware.kryo" % "kryo" % "2.21" % "provided",
+  "com.databricks" % "spark-avro_2.10" % "3.2.0"
 )
+
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
 
 assemblyJarName in assembly := "algorithms.jar"
