@@ -28,11 +28,12 @@ case class StreamingJobConfig(
 
 class StreamingJob() extends Serializable {
 
+  // Function to implement in order to have a one-line wrapper
   def initiate(): Unit = {
     println("hi")
   }
 
-  // Function that exctracts values of fields and builds the map (fieldName -> fieldValue)
+  // Function that extracts values of fields and builds the map (fieldName -> fieldValue)
   def extractValues(avroRecord: Object, selectedFields: Array[String]): scala.collection.mutable.Map[String, String] = {
     // Create an empty map that will contain the mappings (fieldName -> fieldValue) by fetching its value from inside the record
     val name2value = collection.mutable.Map[String, String]()
