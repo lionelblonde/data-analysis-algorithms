@@ -10,7 +10,7 @@ case class StreamingKmeansConfig(
   features: Array[String]
 )
 
-class SteamingKmeans() {
+class StreamingKmeans() {
 
   def train(stream: DStream[Map[String, String]], config: StreamingKmeansConfig): StreamingKMeans = {
     val vectorStream = stream.map { avroRecord =>
