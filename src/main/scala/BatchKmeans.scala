@@ -84,4 +84,14 @@ class BatchKmeans() {
     (pipelineModels.toArray, assemblers.toArray, kmeansModels.toArray, trainingErrors.toArray)
   }
 
+  def printClusterCentroids(kmeansModel: KMeansModel): Unit = {
+    val centroids = kmeansModel.clusterCenters
+    centroids.zipWithIndex.foreach(c => println(s"Centroid #${c._2} coordinates: ${c._1}"))
+  }
+
+  def printClusterCardinalities(kmeansModel: KMeansModel): Unit = {
+    val cardinalities = kmeansModel.summary.clusterSizes
+    cardinalities.zipWithIndex.foreach(c => println(s"Centroid #${c._2} cardinality: ${c._1}"))
+  }
+
 }
