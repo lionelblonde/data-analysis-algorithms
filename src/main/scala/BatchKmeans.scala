@@ -14,7 +14,8 @@ case class BatchKmeansConfig(
 
 class BatchKmeans() {
 
-  def fit(trainingData: DataFrame, config: BatchKmeansConfig): (PipelineModel, VectorAssembler, KMeansModel, Double) = {
+  def fit(trainingData: DataFrame, config: BatchKmeansConfig):
+    (PipelineModel, VectorAssembler, KMeansModel, Double) = {
 
     // Pull features out of the config
     val features = config.features
@@ -61,7 +62,8 @@ class BatchKmeans() {
   }
 
   def multiFit(trainingData: DataFrame, config: BatchKmeansConfig):
-      (Array[(Int, PipelineModel)], Array[(Int, VectorAssembler)], Array[(Int, KMeansModel)], Array[(Int, Double)]) = {
+      (Array[(Int, PipelineModel)], Array[(Int, VectorAssembler)],
+       Array[(Int, KMeansModel)], Array[(Int, Double)]) = {
 
     // Pull features out of the config
     val features = config.features
@@ -80,7 +82,8 @@ class BatchKmeans() {
       println(s"Done processing with k=${e}.")
     }
 
-    // Seq is convertible in DataFrame via .toDF(), while Array is not (but a .toSeq.toDF() would!)
+    // Seq is convertible in DataFrame via `.toDF()`, while Array is not
+    // `.toSeq.toDF()` would transform an Array into a DataFrame
     (pipelineModels.toArray, assemblers.toArray, kmeansModels.toArray, trainingErrors.toArray)
   }
 

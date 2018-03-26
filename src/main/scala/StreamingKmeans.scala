@@ -12,7 +12,9 @@ case class StreamingKmeansConfig(
 
 class StreamingKmeans() {
 
-  def train(stream: DStream[Map[String, String]], config: StreamingKmeansConfig): StreamingKMeans = {
+  def train(stream: DStream[Map[String, String]], config: StreamingKmeansConfig):
+    StreamingKMeans = {
+
     val vectorStream = stream.map { avroRecord =>
       val values = config.features.map(f => avroRecord(f).toDouble)
       Vectors.dense(values)
@@ -21,7 +23,9 @@ class StreamingKmeans() {
     val streamingKmeans = new StreamingKMeans()
       .setK(config.k)
       .setDecayFactor(config.decayFactor)
-      .setRandomCenters(config.features.length, config.randomCentersWeight, config.randomCentersSeed)
+      .setRandomCenters(config.features.length,
+                        config.randomCentersWeight,
+                        config.randomCentersSeed)
 
     streamingKmeans.trainOn(vectorStream)
 

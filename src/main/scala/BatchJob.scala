@@ -30,7 +30,7 @@ class BatchJob() extends Serializable {
 
   def filterDataFrame(df: DataFrame, filter: Array[Any]): DataFrame = {
     // No choice here but to define a var
-    // Filters will be successively applied to the df, since the sql conjonction syntax is too tricky
+    // Filters will be successively applied to the df, since the sql conjonction syntax is tricky
     var myFilteredDf = df
     val myFilters = filter.map { c =>
       c match {
@@ -58,7 +58,8 @@ class BatchJob() extends Serializable {
     val fullHdfsPath = config.hdfsPath + config.topic
     // Pull data from hdfs
     val df = sqlc.read.avro(fullHdfsPath)
-    // Format column names according to a our period-separated convention (e.g. header.time) to have the full path in the avro schema
+    // Format column names according to a our period-separated convention (e.g. header.time)
+    // to have the full path in the avro schema
     val flattenedSchema = flattenSchema(df.schema)
     val renamedCols = flattenedSchema.map(name => col(name.toString()).as(name.toString()))
     val flattenedDf = df.select(renamedCols:_*)
